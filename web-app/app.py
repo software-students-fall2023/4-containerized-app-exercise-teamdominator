@@ -1,3 +1,4 @@
+'''App scripts'''
 from flask import Flask, render_template
 from pymongo import MongoClient
 
@@ -8,7 +9,7 @@ app = Flask(__name__)
 client = MongoClient("mongodb://localhost:27017/")
 db = client.test  # this is the database name
 
-
+''' index page '''
 @app.route('/')
 def index():
     # Fetch some data from your MongoDB database
@@ -20,4 +21,6 @@ def index():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
 
