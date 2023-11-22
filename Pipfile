@@ -10,6 +10,8 @@ flask = "*"
 pymongo = "*"
 
 [dev-packages]
+flask = "*"
+pymongo = "*"
 
 
 [requires]
