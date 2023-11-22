@@ -71,6 +71,6 @@ yolo_config = 'yolov/yolov3.cfg'
 yolo_labels = 'yolov/coco.names'
 
 # Replace with the path to an image you want to process
-image_path = 'zidane.jpg'
+image_path = './camera_data/frame_1.jpg'
 
 yolo_object_detection(image_path, yolo_weights, yolo_config, yolo_labels)
