@@ -18,6 +18,7 @@ jobs:
           pipenv sync
           pipenv sync --dev --python $(which python)
           pipenv shell --fancy --python $(which python)
+          pipenv install -r web-app/requirements.txt
       - name: Lint with pylint
         if: ${{ hashFiles('**/*.py') != '' }}
         run: |
