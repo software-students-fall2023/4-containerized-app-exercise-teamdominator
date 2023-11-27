@@ -23,7 +23,7 @@ jobs:
         if: ${{ hashFiles('**/*.py') != '' }}
         run: |
           pipenv run pylint **/*.py
-      # - name: Format with black
-      #   if: ${{ hashFiles('**/*.py') != '' }}
-      #   run: |
-      #     pipenv run black --diff --check .
+      - name: Format with black
+        if: ${{ hashFiles('**/*.py') != '' }}
+        run: |
+          pipenv run black --diff --check .
