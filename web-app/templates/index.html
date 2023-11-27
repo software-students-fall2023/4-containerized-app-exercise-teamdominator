@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Processing App</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #canvas, #video, #outputImage {
+            max-width: 100%;
+            height: auto;
+        }
+
+        #video {
+            transform: scaleX(-1);
+        }
+
+        #outputImage {
+            width: 320px;
+            height: 240px;
+            object-fit: contain;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            font-size: 20px;
+            position: relative;
+        }
+
+        #outputImage::before {
+            content: 'Processed Image Appears Here';
+            text-align: center;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #outputImage img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <!-- Live Camera Feed -->
+        <div class="col-md-4">
+            <h5>Live Camera</h5>
+            <video id="video" width="320" height="240" autoplay></video>
+            <button id="capture" class="btn btn-primary mt-2">Capture Photo</button>
+        </div>
+
+        <!-- Captured or Uploaded Image -->
+        <div class="col-md-4">
+            <h5>Captured/Uploaded Image</h5>
+            <canvas id="canvas" width="320" height="240"></canvas>
+            <input type="file" id="upload" class="mt-2"/>
+        </div>
+
+        <!-- Processed Image -->
+        <div class="col-md-4">
+            <h5>Processed Image</h5>
+            <img id="outputImage" src="" alt="Processed Image" width="320" height="240"/>
+            <button id="process" class="btn btn-success mt-2">Process Image</button>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <a href="/visualize_data" class="btn btn-info">Visualize Database Data</a>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap and jQuery -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let video = document.getElementById('video');
+        let canvas = document.getElementById('canvas');
+        let context = canvas.getContext('2d');
+        let captureButton = document.getElementById('capture');
+        let processButton = document.getElementById('process');
+        let outputImage = document.getElementById('outputImage');
+        let uploadButton = document.getElementById('upload');
+
+        // Access the camera
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({video: true})
+                .then(function (stream) {
+                    video.srcObject = stream;
+                    video.play();
+                })
+                .catch(function (err) {
+                    console.log("An error occurred: " + err);
+                });
+        }
+
+        // Capture the photo
+        captureButton.addEventListener('click', function () {
+            context.drawImage(video, 0, 0, 320, 240);
+        });
+
+        // Process the photo
+        processButton.addEventListener('click', function () {
+            outputImage.src = canvas.toDataURL('image/png');
+        });
+
+        // Handle image upload
+        uploadButton.addEventListener('change', function (e) {
+            let file = e.target.files[0];
+            let reader = new FileReader();
+
+            reader.onloadend = function () {
+                let img = new Image();
+                img.onload = function () {
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    context.drawImage(img, 0, 0, 320, 240);
+                };
+                img.src = reader.result;
+            };
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+</script>
+</body>
+</html>
