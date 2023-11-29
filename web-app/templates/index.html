@@ -98,11 +98,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     
     <script>
-        if (window.jQuery) {  
-             console.log('jQuery is loaded'); 
-        } else {
-             console.log('jQuery is not loaded');
-                }
         $(document).ready(function() {
             let video = document.getElementById('video');
             let canvas = document.getElementById('canvas');
@@ -143,7 +138,7 @@
     
             // Function to send image data to server via AJAX
             function sendImageToServer(imageData) {
-                jQuery.ajax({
+                $.ajax({
                     type: 'POST',
                     url: '/',
                     contentType: 'application/json',
@@ -156,7 +151,24 @@
                     }
                 });
             }
+
+            // Process Image Button Click Event
+            $('#process').click(function() {
+                $.ajax({
+                    type: 'POST',
+                    url: '/trigger-processing',
+                    success: function(response) {
+                        console.log('Processing triggered:', response);
+                        // Redirect to show-processed-image route on successful processing
+                        window.location.href = '/show-processed-image';
+                    },
+                    error: function(error) {
+                        console.log('Error triggering processing:', error);
+                    }
+                });
+            });
+
         });
     </script>
-    </body>
-    </html>
+</body>
+</html>
