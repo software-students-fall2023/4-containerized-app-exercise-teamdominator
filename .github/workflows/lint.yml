@@ -26,5 +26,5 @@ jobs:
       - name: Format with black
         if: ${{ hashFiles('**/*.py') != '' }}
         run: |
-          pipenc run black .
+          pipenv run black .
           pipenv run black --diff --check .
