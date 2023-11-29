@@ -9,10 +9,15 @@ black = "*"
 flask = "*"
 pymongo = "*"
 requests = "*"
+pytest = "*"
 
 [dev-packages]
 flask = "*"
 pymongo = "*"
+requests = "*"
+pytest = "*"
+pylint = "*"
+black = "*"
 
 [requires]
 python_version = "3.10"
