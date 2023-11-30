@@ -34,7 +34,7 @@ def index():
 @app.route('/trigger-processing', methods=['POST'])
 def trigger_processing():
     """Trigger image processing using the machine-learning client."""
-    response = requests.get('http://machine-learning-client:5001/process-latest-image')
+    response = requests.get('http://ml-client:5001/process-latest-image')
     return jsonify(response.json())
 
 
