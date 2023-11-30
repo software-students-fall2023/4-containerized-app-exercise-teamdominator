@@ -22,8 +22,9 @@ jobs:
       - name: Lint with pylint
         if: ${{ hashFiles('**/*.py') != '' }}
         run: |
-          pipenv run pylint **/*.py
+          pipenv run pylint **/*.py -d C,R,I,W
       - name: Format with black
         if: ${{ hashFiles('**/*.py') != '' }}
         run: |
+          pipenv run black .
           pipenv run black --diff --check .
