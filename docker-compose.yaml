@@ -12,6 +12,8 @@ services:
   ml-client:
     container_name: ml_client_container
     build: ./machine-learning-client/ML
+    ports:
+      - "6001:6000"
     depends_on:
       - mongodb
 
