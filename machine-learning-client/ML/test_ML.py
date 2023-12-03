@@ -4,7 +4,7 @@ from main import app  # Import your Flask app
 import numpy as np
 import io
 
-# Configure app for testing
+# Configure app for testing, edit comments for CI testing
 @pytest.fixture
 def client():
     app.config['TESTING'] = True
