@@ -1,0 +1,24 @@
+name: Python CI with Docker in ML Directory
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build Docker Image in ML Directory
+      run: |
+        cd machine-learning-client/ML
+        docker build -t myapp:test .
+
+    - name: Run Pytest in Docker in ML Directory
+      run: |
+        cd machine-learning-client/ML
+        docker run --rm myapp:test pytest
