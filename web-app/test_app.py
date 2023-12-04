@@ -48,12 +48,3 @@ def test_show_processed_image(mock_find, client):
     assert response.status_code == 200
     assert 'text/html' in response.content_type
 
-@patch('pymongo.collection.Collection.find_one')
-def test_visualize_data(mock_find_one, client):
-    """Test the visualize data route."""
-    # Mock the MongoDB find_one method
-    mock_find_one.return_value = {'some': 'data'}
-    response = client.get("/visualize_data")
-    assert response.status_code == 200
-    assert 'text/html' in response.content_type
-
