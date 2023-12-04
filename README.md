@@ -42,6 +42,10 @@ After downloading the file, the user should put this file into the folder: "mach
 
 Open a web browser and go to `http://localhost:5001` to access the web application.
 
+## Process of our application
+
+When you visit the `http://localhost:5001`  successfully, you will see our web dashboard. The left part of the dashboard is a live camera. When you click on the "Capture Photo" button, the camera will capture the photo of yourself, which will be shown on the middle part of the dashboard. You can also choose to upload an image file by clicking the "Choose File" button in the middle. Then click on the "Process Image" button on the right side to see the visualized result!
+
 ## Stopping the Services
 
 To stop all services, run the following command in the directory containing the `docker-compose.yaml` file:
