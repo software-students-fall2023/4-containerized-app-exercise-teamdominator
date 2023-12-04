@@ -22,3 +22,30 @@ jobs:
       run: |
         cd machine-learning-client/ML
         docker run --rm myapp:test pytest
+        
+  deployment-on-dockerHub:
+    runs-on: ubuntu-latest
+
+    steps: 
+    - uses: actions/checkout@v3
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        
+    - name: Deploy on Docker Hub
+      uses: docker/build-push-action@v3
+      with:
+        context: ./path_to_dom_ml
+        file: ./machine-learning-client/ML/Dockerfile
+        push: true
+        tags: hyteve/dom-ml:latest
+
+
+
+
+
+
+
+     
