@@ -37,7 +37,7 @@ jobs:
     - name: Deploy on Docker Hub
       uses: docker/build-push-action@v3
       with:
-        context: ./path_to_dom_ml
+        context: ./machine-learning-client/ML
         file: ./machine-learning-client/ML/Dockerfile
         push: true
         tags: hyteve/dom-ml:latest
