@@ -48,12 +48,5 @@ def show_processed_image():
     return render_template("display_image.html", image_data_url=image_data_url)
 
 
-@app.route("/visualize_data")
-def visualize_data():
-    """Visualize data from the database."""
-    data = db.test.find_one()
-    return render_template("visualize_data.html", data=data)
-
-
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
