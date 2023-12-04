@@ -1,6 +1,6 @@
 
 import pytest
-from yourapp import app  # Replace 'yourapp' with the actual name of your Python file containing the Flask app
+from app import app  
 from unittest.mock import patch, MagicMock
 
 @pytest.fixture
