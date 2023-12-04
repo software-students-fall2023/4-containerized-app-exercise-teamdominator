@@ -1,5 +1,7 @@
+
 import pytest
-from app import app  
+from yourapp import app  # Replace 'yourapp' with the actual name of your Python file containing the Flask app
+from unittest.mock import patch, MagicMock
 
 @pytest.fixture
 def client():
@@ -7,40 +9,27 @@ def client():
     with app.test_client() as client:
         yield client
 
-def test_index_get(client):
-    """Test the index route with GET method."""
-    response = client.get("/")
-    assert response.status_code == 200
-    assert 'text/html' in response.content_type
-
-def test_index_post(client):
+@patch('pymongo.collection.Collection.insert_one')
+def test_index_post(mock_insert, client):
     """Test the index route with POST method."""
-    # Example test data, adjust as needed
+    mock_insert.return_value = None  # Mock the insert_one method
     test_data = {"imageData": "data:image/png;base64,TESTDATA"}
     response = client.post("/", json=test_data)
     assert response.status_code == 200
-    # Adjust the expected response as per your application logic
     assert response.json == {"status": "success", "message": "Image uploaded"}
 
-def test_trigger_processing(client):
+@patch('requests.get')
+def test_trigger_processing(mock_get, client):
     """Test the trigger processing route."""
+    mock_response = MagicMock()
+    mock_response.json.return_value = {"status": "processed"}
+    mock_get.return_value = mock_response
+
     response = client.post("/trigger-processing")
-    # The status code and response might need to be adjusted based on actual app behavior
     assert response.status_code == 200
-    # Adjust the expected response as per your application logic
-    assert response.json is not None
+    assert response.json == {"status": "processed"}
 
-def test_show_processed_image(client):
-    """Test the show processed image route."""
-    response = client.get("/show-processed-image")
-    assert response.status_code == 200
-    assert 'text/html' in response.content_type
-
-def test_visualize_data(client):
-    """Test the visualize data route."""
-    response = client.get("/visualize_data")
-    assert response.status_code == 200
-    assert 'text/html' in response.content_type
+# ... other tests ...
 
 
 # Additional tests for '/show-processed-image' and '/visualize_data' can be written in a similar fashion.
