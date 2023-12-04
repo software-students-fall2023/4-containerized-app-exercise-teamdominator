@@ -33,15 +33,20 @@ def test_trigger_processing(mock_get, client):
 @patch('pymongo.collection.Collection.find')
 def test_show_processed_image(mock_find, client):
     """Test the show processed image route."""
-    # Mock the MongoDB find method
-    mock_find.return_value = [{
+    # Create a mock for the find().sort().limit().next() chain
+    mock_cursor = MagicMock()
+    mock_cursor.sort.return_value = mock_cursor
+    mock_cursor.limit.return_value = mock_cursor
+    mock_cursor.next.return_value = {
         '_id': 1,
         'processed_image': b'fake_image_data'
-    }]
+    }
+    
+    mock_find.return_value = mock_cursor
+    
     response = client.get("/show-processed-image")
     assert response.status_code == 200
     assert 'text/html' in response.content_type
-    # You can add more assertions here to check for specific content in the response
 
 @patch('pymongo.collection.Collection.find_one')
 def test_visualize_data(mock_find_one, client):
@@ -51,5 +56,4 @@ def test_visualize_data(mock_find_one, client):
     response = client.get("/visualize_data")
     assert response.status_code == 200
     assert 'text/html' in response.content_type
-    # Similar to above, add more assertions as needed
 
