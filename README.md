@@ -37,3 +37,7 @@ docker ps
 
 
 ###TODO:
+
+
+### Web App Client ![Web App CI/CD](https://github.com/software-students-fall2023/4-containerized-app-exercise-teamdominator/actions/workflows/webappCI-CD.yaml/badge.svg)
+
