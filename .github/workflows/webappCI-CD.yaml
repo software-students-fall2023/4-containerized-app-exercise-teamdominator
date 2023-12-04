@@ -13,6 +13,16 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest pytest-mock
+
     - name: Build Docker Image in Webapp Directory
       run: |
         cd web-app
@@ -21,6 +31,7 @@ jobs:
     - name: Run Pytest in Docker in Webapp Directory
       run: |
         cd web-app
+        pip install pytest-mock
         docker run --rm myapp:test pytest
         
   # deployment-on-dockerHub:
