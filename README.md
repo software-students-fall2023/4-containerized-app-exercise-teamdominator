@@ -1,3 +1,4 @@
+![Lint and formatting](https://github.com/software-students-fall2023/4-containerized-app-exercise-teamdominator/actions/workflows/lint.yml/badge.svg)
 # Containerized App Exercise
 
 See [instructions](./instructions.md) for details. This project is a containerized web application that uses YOLO (You Only Look Once) for object detection in images, with MongoDB as the backend for storage. The application consists of two main components: a web app client built with Flask, and a machine learning client for image processing.
