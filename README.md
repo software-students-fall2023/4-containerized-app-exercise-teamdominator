@@ -32,6 +32,11 @@ This command will start the MongoDB database, the web app client, and the machin
 
 ### Machine Learning Client ![Machine Learning CI/CD](https://github.com/software-students-fall2023/4-containerized-app-exercise-teamdominator/actions/workflows/machinelearningCI-CD.yaml/badge.svg)
 
+Reminder: We used the file "yolov3.weights" in our process of machine learning. However, the quota of our class repository is not enough. So here's the link for downloading the file:
+
+https://drive.google.com/file/d/128QCeb4Ea-0TksH4Obpw6KpQrv8SdnU0/view?usp=sharing
+
+After downloading the file, the user should put this file into the folder: "machine-learning-client/ML/yolov".
 
 ### Web App Client ![Web App CI/CD](https://github.com/software-students-fall2023/4-containerized-app-exercise-teamdominator/actions/workflows/webappCI-CD.yaml/badge.svg)
 
