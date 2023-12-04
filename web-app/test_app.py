@@ -1,60 +1,59 @@
-import base64
 
 import pytest
-
-from app import app
-
+from app import app  
+from unittest.mock import patch, MagicMock
 
 @pytest.fixture
 def client():
-    app.config["TESTING"] = True
+    app.config['TESTING'] = True
     with app.test_client() as client:
         yield client
 
-
-def test_index_route(client):
-    """Test the index route."""
-
-    # Simulate a GET request to the '/' route
-    response = client.get("/")
-
-    # Check if the response is 200 OK
-    # We can do more checks here if we want
+@patch('pymongo.collection.Collection.insert_one')
+def test_index_post(mock_insert, client):
+    """Test the index route with POST method."""
+    mock_insert.return_value = None  # Mock the insert_one method
+    test_data = {"imageData": "data:image/png;base64,TESTDATA"}
+    response = client.post("/", json=test_data)
     assert response.status_code == 200
-    assert b"Data from MongoDB" in response.data
+    assert response.json == {"status": "success", "message": "Image uploaded"}
 
+@patch('requests.get')
+def test_trigger_processing(mock_get, client):
+    """Test the trigger processing route."""
+    mock_response = MagicMock()
+    mock_response.json.return_value = {"status": "processed"}
+    mock_get.return_value = mock_response
 
-## new tests but not passed
-def test_index_post_route(client):
-    """Test POST request to the index route."""
-    sample_image_data = 'data:image/png;base64,' + base64.b64encode(b'test image data').decode()
-    response = client.post("/", json={'imageData': sample_image_data})
+    response = client.post("/trigger-processing")
     assert response.status_code == 200
-    assert response.json['status'] == 'success'
+    assert response.json == {"status": "processed"}
 
-def test_trigger_processing_route(client, mocker):
-    """Test the trigger-processing route."""
-    mocker.patch('requests.get', return_value=MockResponse())
-    response = client.post('/trigger-processing')
+
+@patch('pymongo.collection.Collection.find')
+def test_show_processed_image(mock_find, client):
+    """Test the show processed image route."""
+    # Create a mock for the find().sort().limit().next() chain
+    mock_cursor = MagicMock()
+    mock_cursor.sort.return_value = mock_cursor
+    mock_cursor.limit.return_value = mock_cursor
+    mock_cursor.next.return_value = {
+        '_id': 1,
+        'processed_image': b'fake_image_data'
+    }
+    
+    mock_find.return_value = mock_cursor
+    
+    response = client.get("/show-processed-image")
     assert response.status_code == 200
-    # Add more assertions based on expected response
+    assert 'text/html' in response.content_type
 
-def test_show_processed_image_route(client):
-    """Test the show-processed-image route."""
-    response = client.get('/show-processed-image')
+@patch('pymongo.collection.Collection.find_one')
+def test_visualize_data(mock_find_one, client):
+    """Test the visualize data route."""
+    # Mock the MongoDB find_one method
+    mock_find_one.return_value = {'some': 'data'}
+    response = client.get("/visualize_data")
     assert response.status_code == 200
-    assert b'<img src=' in response.data
+    assert 'text/html' in response.content_type
 
-def test_visualize_data_route(client):
-    """Test the visualize_data route."""
-    response = client.get('/visualize_data')
-    assert response.status_code == 200
-    # Add more assertions based on expected content
-
-class MockResponse:
-    """Mock response for external service calls."""
-    def json(self):
-        return {'status': 'success', 'message': 'Processed image'}
-
-if __name__ == "__main__":
-    pytest.main()

@@ -1,4 +1,4 @@
-name: Python CI/CD with Docker in ML Directory
+name: Python CI/CD with Docker in Webapp Directory
 
 on:
   push:
@@ -13,14 +13,15 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Build Docker Image in ML Directory
+    - name: Build Docker Image in Webapp Directory
       run: |
-        cd machine-learning-client/ML
+        cd web-app
         docker build -t myapp:test .
 
-    - name: Run Pytest in Docker in ML Directory
+    - name: Run Pytest in Docker in Webapp Directory
       run: |
-        cd machine-learning-client/ML
+        cd web-app
+        pip install pytest-mock
         docker run --rm myapp:test pytest
         
   deployment-on-dockerHub:
@@ -37,10 +38,10 @@ jobs:
     - name: Deploy on Docker Hub
       uses: docker/build-push-action@v3
       with:
-        context: ./machine-learning-client/ML
-        file: ./machine-learning-client/ML/Dockerfile
+        context: ./web-app
+        file: ./web-app/Dockerfile
         push: true
-        tags: hyteve/dom-ml:latest
+        tags: hyteve/dom-app:latest
 
 
 

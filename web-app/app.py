@@ -41,7 +41,7 @@ def trigger_processing():
 @app.route('/show-processed-image')
 def show_processed_image():
     """Display the most recently processed image."""
-    processed_image_doc = db["processedImageCollection"].find().sort('_id', -1).limit(1).next()
+    processed_image_doc = db["processedImageCollection"].find().sort([('_id', -1)]).limit(1).next()
     encoded_image = base64.b64encode(processed_image_doc['processed_image']).decode('utf-8')
     image_data_url = f"data:image/png;base64,{encoded_image}" if processed_image_doc else None
 
