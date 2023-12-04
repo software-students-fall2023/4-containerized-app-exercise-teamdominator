@@ -1,4 +1,4 @@
-name: Python CI with Docker in ML Directory
+name: Python CI/CD with Docker in ML Directory
 
 on:
   push:

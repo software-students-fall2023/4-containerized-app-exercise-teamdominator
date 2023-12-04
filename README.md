@@ -33,7 +33,7 @@ Check if the MongoDB container is running using:
 ```bash
 docker ps
 ```
-### Machine Learning Client ![Machine Learning CI](https://github.com/software-students-fall2023/4-containerized-app-exercise-teamdominator/actions/workflows/machinelearningCI.yaml/badge.svg)
+### Machine Learning Client ![Machine Learning CI/CD](https://github.com/software-students-fall2023/4-containerized-app-exercise-teamdominator/actions/workflows/machinelearningCI-CD.yaml/badge.svg)
 
 
 ###TODO:
