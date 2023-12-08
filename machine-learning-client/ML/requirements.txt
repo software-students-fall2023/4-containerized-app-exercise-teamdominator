@@ -1,0 +1,6 @@
+numpy
+opencv-python-headless
+flask
+numpy
+pymongo
+pytest

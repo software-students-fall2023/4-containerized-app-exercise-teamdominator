@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Processing App</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        #canvas, #video, #outputImage {
+            max-width: 100%;
+            height: auto;
+        }
+
+        #video {
+            transform: scaleX(-1);
+        }
+
+        #outputImage {
+            width: 320px;
+            height: 240px;
+            object-fit: contain;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            font-size: 20px;
+            position: relative;
+        }
+
+        #outputImage::before {
+            content: 'Processed Image Appears Here';
+            text-align: center;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #outputImage img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <!-- Live Camera Feed -->
+            <div class="col-md-4">
+                <h5>Live Camera</h5>
+                <video id="video" width="320" height="240" autoplay></video>
+                <button id="capture" class="btn btn-primary mt-2">Capture Photo</button>
+            </div>
+    
+            <!-- Captured or Uploaded Image -->
+            <div class="col-md-4">
+                <h5>Captured/Uploaded Image</h5>
+                <canvas id="canvas" width="320" height="240"></canvas>
+                <input type="file" id="upload" class="mt-2"/>
+            </div>
+    
+            <!-- Processed Image -->
+            <div class="col-md-4">
+                <h5>Processed Image</h5>
+                {% if image_data_url %}
+                    <img src="{{ image_data_url }}" alt="Processed Image" />
+                {% else %}
+                    <p>No processed image available.</p>
+                {% endif %}
+                <button id="process" class="btn btn-success mt-2">Process Image</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Form for Image Submission -->
+    <form id="imageForm" action="/" method="POST" style="display: none;">
+        <input type="hidden" name="imageData" id="imageData">
+    </form>
+    
+    <!-- Bootstrap and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            let video = document.getElementById('video');
+            let canvas = document.getElementById('canvas');
+            let context = canvas.getContext('2d');
+            let captureButton = document.getElementById('capture');
+            let uploadButton = document.getElementById('upload');
+    
+            // Access the camera
+            if (navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({video: true})
+                    .then(stream => video.srcObject = stream)
+                    .catch(err => console.log("An error occurred: " + err));
+            }
+    
+            // Capture the photo and send to server via AJAX
+            captureButton.onclick = function() {
+                context.drawImage(video, 0, 0, 320, 240);
+                let imageData = canvas.toDataURL('image/png');
+                sendImageToServer(imageData);
+            };
+    
+            // Handle image upload
+            uploadButton.onchange = function(e) {
+                let file = e.target.files[0];
+                let reader = new FileReader();
+                reader.onload = function(event) {
+                    let img = new Image();
+                    img.onload = function() {
+                        context.clearRect(0, 0, canvas.width, canvas.height);
+                        context.drawImage(img, 0, 0, 320, 240);
+                        let imageData = canvas.toDataURL('image/png');
+                        sendImageToServer(imageData);
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            };
+    
+            // Function to send image data to server via AJAX
+            function sendImageToServer(imageData) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/',
+                    contentType: 'application/json',
+                    data: JSON.stringify({imageData: imageData}),
+                    success: function(response) {
+                        console.log('Image uploaded successfully:', response);
+                    },
+                    error: function(error) {
+                        console.log('Error uploading image:', error);
+                    }
+                });
+            }
+
+            // Process Image Button Click Event
+            $('#process').click(function() {
+                $.ajax({
+                    type: 'POST',
+                    url: '/trigger-processing',
+                    success: function(response) {
+                        console.log('Processing triggered:', response);
+                        // Redirect to show-processed-image route on successful processing
+                        window.location.href = '/show-processed-image';
+                    },
+                    error: function(error) {
+                        console.log('Error triggering processing:', error);
+                    }
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>

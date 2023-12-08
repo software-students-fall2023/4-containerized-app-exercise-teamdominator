@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+
+  web-app:
+    container_name: web_app_container
+    image: hyteve/dom-app:latest
+    ports:
+      - "5001:5000"
+    depends_on:
+      - mongodb
+
+  ml-client:
+    container_name: ml_client_container
+    ### Once the Professor increase the repo size limit for us, we could use the intended image from DockerHub
+    
+    # image: hyteve/dom-ml:latest
+    
+    ### Because the size of the weights file exceeds professor's repo size limit, the image on Dockerhub does mot contain weights
+    ### Thus it needs to be built from local using the temporary code below, *after manually adding weights*
+    
+    build:
+      context: ./machine-learning-client/ML
+      dockerfile: Dockerfile
+      
+    ports:
+      - "6001:6000"
+    depends_on:
+      - mongodb
+
+  mongodb:
+    container_name: mongodb_container
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+
+volumes:
+  mongodb-data:
