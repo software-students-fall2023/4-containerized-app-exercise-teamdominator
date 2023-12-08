@@ -62,3 +62,11 @@ If you encounter any issues, check the following:
 - Ensure that all Docker containers are up and running. Use `docker ps` to check the status.
 - Check the Docker container logs for any error messages.
 - Ensure that the ports specified in the `docker-compose.yaml` are not used by other services and are correctly mapped.
+
+## Notes Regarding Digital Ocean
+
+https://walrus-app-elw3s.ondigitalocean.app/
+
+After clicking on "process image", there will be a 10 seconds delay.
+
+The weights is too big to upload to our GitHub repo(prof has mentioned this in class), so we can't achieve the CD of digital ocean. 
